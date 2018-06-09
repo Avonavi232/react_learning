@@ -1,0 +1,32 @@
+.chat {
+	display: flex;
+	justify-content: space-between;
+	max-width: 600px;
+	margin: 0 auto;
+	padding: 20px;
+	border: 1px solid grey;
+}
+
+.users__list {
+	padding-left: 0;
+}
+
+.users__user {
+	list-style-type: none;
+}
+
+.users__user span {
+	display: inline-block;
+	vertical-align: middle;
+}
+
+.users__user:before {
+	content: '';
+	display: inline-block;
+	width:6px;
+	height:6px;
+	margin-right: 5px;
+	border-radius: 50%;
+	background-color: green;
+	vertical-align: middle;
+}
