@@ -16,38 +16,54 @@ wss.on('connection', function (ws) {
     clients.push(Object.assign(ws, {userID: Date.now()}));
     var userName = false;
     var userColor = false;
+
     ws.on('message', function (msg) {
         if (!userName) {
             userName = msg;
             userColor = colors.shift();
-            ws.send(JSON.stringify({
+
+            const message = JSON.stringify({
                 type: 'connected_new_user',
                 userName,
                 userID: ws.userID
-            }));
+            });
+
+            clients.forEach(client => {
+                client.send(message);
+            });
+
             console.log(userName + ' login');
         } else {
             console.log(userName + ' say: ' + msg);
             var obj = {
+                userID: ws.userID,
                 time: (new Date()).getTime(),
                 text: msg,
                 author: userName,
                 color: userColor
             };
-            var json = JSON.stringify({type: 'message', data: obj});
+            var json = JSON.stringify({type: 'got_message', data: obj});
             for (var i = 0; i < clients.length; i++) {
                 clients[i].send(json);
             }
         }
     });
+
     ws.on('close', function () {
+
         var index = clients.indexOf(ws);
         clients.splice(index, 1);
         if (userName !== false && userColor != false) {
             colors.push(userColor);
         }
-    });
 
+        const message = JSON.stringify({type: 'user_disconnected', userID: ws.userID});
+
+        clients.forEach(client => {
+            client.send(message);
+        })
+
+    });
 });
 
 app.configure(function () {

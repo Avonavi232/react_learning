@@ -13,11 +13,11 @@ class PeoplesList extends React.Component {
 					<ul className="list">
 						{
 							(Array.isArray(users) && users.length) &&
-									users.map((user, index) => {
+									users.map(user => {
 										user.avatar = 'https://s3-us-west-2.amazonaws.com/s.cdpn.io/195612/chat_avatar_01.jpg';
 
 										return (
-                                            <UserItem key={user.userID} user={user}/>
+                                            <UserItem key={user.id} user={user}/>
 										)
 									})
 						}

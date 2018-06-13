@@ -18,7 +18,7 @@ const loggerMiddleware = store => next => action => {
 };
 
 const checkUserMiddleware = store => next => action => {
-	if (action.type === 'CONNECTED_NEW_USER') {
+	if (action.type === 'USER_CONNECTED') {
 		new Promise(resolve => {
 			setTimeout(() => {
 				resolve()

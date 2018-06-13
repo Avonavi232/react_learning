@@ -9,7 +9,7 @@ class ChatWrap extends React.Component{
         return(
             <div>
                 <PeoplesList/>
-                <MessagesList/>
+                <MessagesList ws={this.props.ws}/>
             </div>
         )
     }

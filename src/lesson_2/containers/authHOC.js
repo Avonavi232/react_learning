@@ -9,7 +9,6 @@ export default (Child) => {
         }
 
         resetLocalStorage = () => {
-            alert(1);
             localStorage.removeItem('auth');
         };
 
@@ -51,7 +50,7 @@ export default (Child) => {
         render() {
             return (
                 this.state.name ?
-                    <Child/> :
+                    <Child {...this.props}/> :
                     this.notLogged()
             )
         }

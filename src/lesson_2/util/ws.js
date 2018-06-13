@@ -1,4 +1,4 @@
-import {connectedNewUser} from "../actions";
+import {connectedNewUser, userDisconnected, gotMessage} from "../actions";
 
 
 export const wsInit = (wsUrl, store) => {
@@ -10,21 +10,21 @@ export const wsInit = (wsUrl, store) => {
     });
 
     ws.addEventListener('message', responce => {
-        let messageObj;
+        console.log("ws message: ", responce.data);
 
-        try{
-            messageObj = JSON.parse(responce.data);
-        } catch(e){
-            console.log(`Ошибка парсинга json: ${e.message}`);
-            return;
-        }
+        const data = JSON.parse(responce.data);
 
-        console.log("ws message: ", messageObj);
-
-        switch (messageObj.type) {
+        switch (data.type) {
             case 'connected_new_user':
-                const {userName, userID} = messageObj;
-                store.dispatch(connectedNewUser(userName, userID));
+                store.dispatch(connectedNewUser(data));
+                break;
+
+            case 'user_disconnected':
+                store.dispatch(userDisconnected(data));
+                break;
+
+            case 'got_message':
+                store.dispatch(gotMessage(data.data));
                 break;
         }
     });
