@@ -2,18 +2,19 @@ import {createStore, compose, applyMiddleware} from 'redux';
 
 import {reducer} from "../reducers/index";
 
-const loggerMiddleware = store => next => action => {
-	return next(action);
-};
+import logger from 'redux-logger'
 
 const configureStore = () => {
+    const enhancer = window.devToolsExtension ? compose(
+        applyMiddleware(logger),
+        window.devToolsExtension()
+    ) : applyMiddleware(logger);
+
     const store = createStore(
         reducer,
-        compose(
-						window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__(),
-            applyMiddleware(loggerMiddleware)
-        )
+        enhancer
     );
+
     window.store = store;
 
     if (process.env.NODE_ENV !== "production") {
@@ -26,5 +27,7 @@ const configureStore = () => {
 
     return store
 };
+
+
 
 export default configureStore();
