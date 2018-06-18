@@ -5,7 +5,7 @@ import {Provider} from 'react-redux';
 
 import store from "./store";
 import ChatWrap from './containers/ChatWrap';
-import {wsInit} from "./util/ws";
+import wsInit from "./util/ws";
 
 
 class App extends React.Component {

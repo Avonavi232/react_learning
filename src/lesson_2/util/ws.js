@@ -1,7 +1,6 @@
 import {connectedNewUser, userDisconnected, gotMessage} from "../actions";
 
-
-export const wsInit = (wsUrl, store) => {
+ const wsInit = (wsUrl, store) => {
     const ws = new WebSocket(wsUrl);
 
 
@@ -25,6 +24,9 @@ export const wsInit = (wsUrl, store) => {
 
             case 'got_message':
                 store.dispatch(gotMessage(data.data));
+                break;
+
+            default:
                 break;
         }
     });
@@ -50,3 +52,5 @@ export const wsInit = (wsUrl, store) => {
 
     return {ws, emit};
 };
+
+export default wsInit;

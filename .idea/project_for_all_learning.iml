@@ -6,5 +6,8 @@
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="library" name="express-DefinitelyTyped" level="application" />
     <orderEntry type="library" name="ws-DefinitelyTyped" level="application" />
+    <orderEntry type="library" name="Jest" level="project" />
+    <orderEntry type="library" name="@types/react-test-renderer" level="application" />
+    <orderEntry type="library" name="@types/react" level="application" />
   </component>
 </module>
