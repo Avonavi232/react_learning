@@ -1,0 +1,7 @@
+{
+"version": 3,
+"mappings": "AAEA,QAAS,CACP,MAAM,CAAE,OAAO,CACf,MAAM,CAAE,IAAI,CACZ,KAAK,CAAE,IAAI,CACX,MAAM,CAAE,GAAG,CACX,KAAK,CAAE,IAAI,CACX,gBAAgB,CAAE,OAAwB,CAC1C,SAAS,CAAE,kGAAkG,CAE7G,iBAAW,CACT,gBAAgB,CAAE,GAAG",
+"sources": ["Star.scss"],
+"names": [],
+"file": "Star.css"
+}

@@ -4,8 +4,11 @@
   "private": true,
   "dependencies": {
     "faker": "^4.1.0",
+    "httpster": "^1.0.3",
+    "prop-types": "^15.6.1",
     "react": "^16.3.2",
     "react-dom": "^16.3.2",
+    "react-icons": "^2.2.7",
     "react-redux": "^5.0.7",
     "react-scripts": "1.1.4",
     "redux": "^4.0.0",
@@ -13,12 +16,14 @@
     "uuid": "^3.2.1"
   },
   "scripts": {
+    "jest": "jest",
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-app-rewired test --env=jsdom",
     "eject": "react-app-rewired eject"
   },
   "devDependencies": {
+    "deep-freeze": "0.0.1",
     "enzyme": "^3.3.0",
     "enzyme-adapter-react-16": "^1.1.1",
     "react-app-rewire-hot-loader": "^1.0.1",

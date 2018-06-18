@@ -1,15 +1,31 @@
-import React from 'react';
-import ReactDOM from 'react-dom';
+// import React from 'react';
+// import ReactDOM from 'react-dom';
+//
+// import App from './book_chapter_10/components/App';
+//
+// ReactDOM.render(<App />, document.getElementById('root'));
+//
+// if (process.env.NODE_ENV !== "production") {
+//     if (module.hot) {
+//         module.hot.accept('./book_chapter_10/components/App', () => {
+//             ReactDOM.render(<App />, document.getElementById('root'))
+//         })
+//     }
+// }
+//
 
-import App from './lesson_7_2/App';
+import React from 'react'
+import { render } from 'react-dom'
+import { Provider } from 'react-redux'
+import App from './book_chapter_10/components/App'
+import storeFactory from './book_chapter_10/store'
 
-ReactDOM.render(<App />, document.getElementById('root'));
+const store = storeFactory();
 
-if (process.env.NODE_ENV !== "production") {
-    if (module.hot) {
-        module.hot.accept('./lesson_7_2/App', () => {
-            ReactDOM.render(<App />, document.getElementById('root'))
-        })
-    }
-}
+render(
+    <Provider store={store}>
+        <App />
+    </Provider>,
+    document.getElementById('root')
+)
 

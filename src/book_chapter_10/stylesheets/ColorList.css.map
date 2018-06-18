@@ -1,0 +1,7 @@
+{
+"version": 3,
+"mappings": "AAEA,cAAe,CACb,SAAS,CAAE,CAAC,CACZ,OAAO,CAAE,IAAI,CACb,SAAS,CAAE,IAAI,CACf,UAAU,CAAE,MAAM,CAElB,QAAQ,CAAE,MAAM",
+"sources": ["ColorList.scss"],
+"names": [],
+"file": "ColorList.css"
+}
