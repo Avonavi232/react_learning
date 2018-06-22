@@ -1,5 +1,3 @@
-const ColorListMock = () => <div></div>
-
-ColorListMock.displayName = "ColorListMock"
+const ColorListMock = () => <div className="color-list-mock"/>;
 
 export default ColorListMock

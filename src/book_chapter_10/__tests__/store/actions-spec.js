@@ -4,6 +4,28 @@ import storeFactory from '../../store';
 import {addColor} from "../../actions";
 import deepFreeze from 'deep-freeze';
 
+class LocalStorageMock {
+    constructor() {
+        this.store = {};
+    }
+
+    clear() {
+        this.store = {};
+    }
+
+    getItem(key) {
+        return this.store[key] || null;
+    }
+
+    setItem(key, value) {
+        this.store[key] = value.toString();
+    }
+
+    removeItem(key) {
+        delete this.store[key];
+    }
+};
+
 describe('addColor', () => {
     let store;
     const colors = [
@@ -31,28 +53,6 @@ describe('addColor', () => {
     ];
 
     beforeAll(() => {
-        class LocalStorageMock {
-            constructor() {
-                this.store = {};
-            }
-
-            clear() {
-                this.store = {};
-            }
-
-            getItem(key) {
-                return this.store[key] || null;
-            }
-
-            setItem(key, value) {
-                this.store[key] = value.toString();
-            }
-
-            removeItem(key) {
-                delete this.store[key];
-            }
-        };
-
         global.localStorage = new LocalStorageMock;
 
         store = storeFactory({colors});
@@ -67,7 +67,5 @@ describe('addColor', () => {
         expect(store.getState().colors[3].rating).toBe(0))
     it("should set timestamp", () =>
         expect(store.getState().colors[3].timestamp).toBeDefined())
-
-
 
 });

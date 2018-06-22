@@ -1,0 +1,33 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`<Color/> Component UI should render correct properties 1`] = `
+<section
+  className="color"
+>
+  <h1>
+    Test Color
+  </h1>
+  <button
+    onClick={[Function]}
+  >
+    <FaTrashO />
+  </button>
+  <div
+    className="color"
+    style={
+      Object {
+        "backgroundColor": "#ffffff",
+      }
+    }
+  />
+  <TimeAgo
+    timestamp="Fri Jun 22 2018"
+  />
+  <div>
+    <StarRating
+      onRate={[Function]}
+      starsSelected={3}
+    />
+  </div>
+</section>
+`;

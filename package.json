@@ -26,10 +26,25 @@
     "deep-freeze": "0.0.1",
     "enzyme": "^3.3.0",
     "enzyme-adapter-react-16": "^1.1.1",
+    "enzyme-to-json": "^3.3.4",
+    "react-addons-test-utils": "^15.6.2",
     "react-app-rewire-hot-loader": "^1.0.1",
     "react-app-rewired": "^1.5.2",
     "react-hot-loader": "^4.2.0",
     "react-test-renderer": "^16.4.1",
     "redux-logger": "^3.0.6"
+  },
+  "jest": {
+    "setupTestFrameworkScriptFile": "./src/book_chapter_10/__tests__/setup/setupTests.js",
+    "modulePathIgnorePatterns": [
+      "setupTests.js",
+      "styleMock",
+      "fileMock"
+    ],
+    "moduleNameMapper": {
+      "\\.(jpg|jpeg|png|gif|eot|otf|webp|svg|ttf|woff|woff2|mp4|webm|wav|mp3|m4a|aac|oga)$": "./src/book_chapter_10/__tests__/setup/fileMock.js",
+      "\\.(css|less)$": "./src/book_chapter_10/__tests__/setup/styleMock.js"
+    },
+    "verbose": true
   }
 }
