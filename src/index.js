@@ -17,15 +17,11 @@
 import React from 'react'
 import { render } from 'react-dom'
 import { Provider } from 'react-redux'
-import App from './book_chapter_10/components/App'
-import storeFactory from './book_chapter_10/store'
+import App from './slider/App'
 
-const store = storeFactory();
 
 render(
-    <Provider store={store}>
-        <App />
-    </Provider>,
+    <App />,
     document.getElementById('root')
 )
 
