@@ -368,10 +368,10 @@ li.active {
 
 .favourite-product-slider {
   position: relative;
-  top: 27px;
-  left: 2px;
-  width: 142px;
-  height: 440px;
+  /*top: 27px;*/
+  /*left: 2px;*/
+  /*width: 142px;*/
+  /*height: 440px;*/
   display: flex;
   flex-direction: column;
   justify-content: space-between;
@@ -380,7 +380,7 @@ li.active {
 
 .arrow-up,
 .arrow-down {
-  position: absolute;
+  /*position: absolute;*/
   height: 30px;
   width: 30px;
   background-image: url(../img/product-card-pics/drop-down-up-chevron-sprite.png);
@@ -425,16 +425,19 @@ li.active {
 .favourite-product-slider__item-1 {
   background: url(../img/product-card-pics/product-card__favourite-product-slider-item-1.png) no-repeat;
   background-position: 29px 0;
+  background-size: contain;
 }
 
 .favourite-product-slider__item-2 {
   background: url(../img/product-card-pics/product-card__favourite-product-slider-item-2.png) no-repeat;
   background-position: 13px 0;
+  background-size: contain;
 }
 
 .favourite-product-slider__item-3 {
   background: url(../img/product-card-pics/product-card__favourite-product-slider-item-3.png) no-repeat;
   background-position: 30px 0;
+  background-size: contain;
 }
 
 
@@ -691,3 +694,49 @@ width: 7px;
 ::-webkit-scrollbar{
 width: 7px;
 }
+
+.slider-list {
+  position: relative;
+  display: block;
+  overflow: hidden;
+  margin: 0;
+  padding: 0;
+  height: 425px;
+}
+
+.slider-track{
+  transition: transform .3s;
+}
+
+.slider-item{
+  box-sizing: border-box;
+}
+
+.slider-item:not(:first-child) {
+  /*margin-top: 20px;*/
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

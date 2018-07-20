@@ -21,3 +21,12 @@ yarn-debug.log*
 yarn-error.log*
 
 /src/lesson_2/server/node_modules/
+/src/slider/layout/catalogue.html
+/src/slider/layout/index.html
+/src/slider/layout/js/
+/src/slider/layout/img/
+/src/slider/layout/order.html
+/src/slider/layout/order_done.html
+/src/slider/layout/fonts/
+/src/slider/layout/favorite.html
+/src/slider/layout/product-card-desktop.html

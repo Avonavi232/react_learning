@@ -2,6 +2,7 @@ import React from 'react';
 import './layout/css/normalize.css'
 import './layout/css/font-awesome.min.css'
 import './layout/css/style.css'
+import './layout/css/style-product-card.css'
 
 const ListItem = props =>
     <li onClick={props.onClick}
@@ -14,35 +15,22 @@ class App extends React.Component {
         super(props);
         this.api = 'https://neto-api.herokuapp.com/bosa-noga';
         this.state = {
-            categories: [],
-            activeCategory: null,
-            activePos: null,
-            items: [],
-            sliderItems: [],
-            fetching: false
+            currentVisible: 0,
+            trackStyle: {},
+            itemStyle: {}
+        };
+
+        this.sliderState = {
+            currentVisible: 0
         }
     }
 
     componentDidMount() {
-        Promise.all([
-            this.apiGet('categories'),
-            this.apiGet('featured')
-        ])
-            .then(values => {
-                const
-                    categories = values[0],
-                    items = values[1];
-
-
-                this.setState({
-                    categories,
-                    items,
-                    activeCategory: categories[2],
-                    activePos: 0
-                }, () => {
-                    this.updateSlider();
-                })
-            })
+        this.sliderInit({
+            direction: 'vertical',
+            equalHeight: true,
+            gutter: 20
+        });
     }
 
     apiGet(url) {
@@ -54,157 +42,260 @@ class App extends React.Component {
         });
     }
 
-    prepareSliderItems(activePos, stack) {
-        let first;
 
-        if ((activePos - 1) < 0) {
-            first =
-                <div
-                    key="1"
-                    className="new-deals__product new-deals__product_stub"
-                />
-        } else {
-            first =
-                <div
-                    key="1"
-                    style={{backgroundImage: `url(${stack[activePos - 1].images[0]})`}}
-                    className="new-deals__product new-deals__product_first"
-                >
-                    <a href="#"></a>
-                </div>
+    sliderInit(userSettings = {}) {
+        const defaults = {
+            slidesToShow: 3,
+            slidesToScroll: 2,
+            direction: 'horizontal',
+            showArrows: true,
+            equalHeight: false,
+            equalWidth: false,
+            gutter: 0
+        };
+
+        this.settings = Object.assign({}, defaults, userSettings);
+
+        this.track = this.refs.track;
+        this.list = this.refs.list;
+        // this.slider = this.refs.slider;
+
+        this.elements = Array.from(this.track.querySelectorAll('.slider-item'));
+
+        /*Items style object*/
+        let itemStyle = {};
+
+        if (this.settings.equalHeight) {
+            itemStyle = Object.assign(itemStyle, this.getEqualSizeStyle('height', this.elements));
         }
 
-        const active =
-            <div
-                key="2"
-                style={{backgroundImage: `url(${stack[activePos].images[0]})`}}
-                className="new-deals__product new-deals__product_active"
-            >
-                <a href="catalogue.html"></a>
-                <div className="new-deals__product_favorite"></div>
-            </div>;
-
-        let last;
-        if ((activePos + 1) > (stack.length - 1)) {
-            last =
-                <div
-                    key="3"
-                    className="new-deals__product new-deals__product_stub"
-                />
-        } else {
-            last =
-                <div
-                    key="3"
-                    style={{backgroundImage: `url(${stack[activePos + 1].images[0]})`}}
-                    className="new-deals__product new-deals__product_last"
-                >
-                    <a href="#"></a>
-                </div>
+        if (this.settings.equalWidth) {
+            itemStyle = Object.assign(itemStyle, this.getEqualSizeStyle('width', this.elements));
         }
+
+        if (this.settings.gutter !== 0) {
+            itemStyle = Object.assign(itemStyle, this.getGutterStyle(this.settings));
+        }
+
+
+
+
+
+        /*Set slider list dimensions*/
+        const listSize = this.getContainerSize(this.settings, this.elements);
+        if (this.direction === 'horizontal') {
+            this.list.style.width = `${listSize}px`;
+        } else {
+            this.list.style.height = `${listSize}px`;
+        }
+
+
+
+        /*Apply arrows to slider*/
+        if (this.settings.showArrows) {
+            const arrows = this.generateArrowsJSX();
+            this.applyArrows(this.slider, arrows);
+        }
+
+        // /*Initialize current slides visible*/
+        // this.sliderState.currentVisible = this.elements.length < this.settings.slidesToShow ?
 
         this.setState({
-            sliderItems: [first, active, last]
-        });
+            itemStyle
+        })
     }
 
-    setActiveCategory = ({target}) => {
-        const targetCatId = target.dataset.id;
+    generateArrowsJSX() {
+        const {settings, list, track, elements} = this;
+        return {
+            prev: <div
+                ref="slider-arrow-prev"
+                onClick={event => this.determineScrollPos(event, settings, list, track, elements)}
+                className="slider-arrow slider-arrow-prev favourite-product-slider__arrow favourite-product-slider__arrow_up arrow-up"
+            />,
+            next: <div
+                ref="slider-arrow-next"
+                onClick={event => this.determineScrollPos(event, settings, list, track, elements)}
+                className="slider-arrow slider-arrow-next favourite-product-slider__arrow favourite-product-slider__arrow_down arrow-down"
+            />
+        }
+    }
 
-        const activeCategory = this.state.categories.find(cat => cat.id === parseInt(targetCatId));
+    getEqualSizeStyle = (dimension, elements) => {
+        let size = 0;
 
-        this.setState({
-            activeCategory
-        })
+        size = elements.reduce((prevVal, el) => {
+            const metric = dimension === 'height' ? el.offsetHeight : el.offsetWidth;
+
+            if (metric > prevVal) {
+                return metric;
+            } else {
+                return prevVal;
+            }
+
+        }, size);
+        // console.log('123', this.state);
+        return {[dimension] : `${size}px`};
     };
 
-    setActivePos = type => {
-        const {activePos} = this.state;
-        if (type === 'decr') {
-            if (activePos < 1) {
-                return;
-            } else {
-                this.setState({
-                    activePos: activePos - 1
-                })
+    getContainerSize(settings, elements) {
+        const dimension = settings.direction === 'horizontal' ? 'width' : 'height';
+
+        let size = 0;
+
+        for (let i = 0; i < settings.slidesToShow; i++) {
+            const metric = dimension === 'width' ? elements[i].offsetWidth : elements[i].offsetHeight;
+            size += metric;
+            if (i !== 0) {
+                size += settings.gutter;
             }
+        }
+
+        return size;
+    }
+
+    getGutterStyle = (settings) => {
+        if (settings.direction === 'horizontal') {
+            return {marginLeft: `${settings.gutter}px`};
+
         } else {
-            const {items, activeCategory} = this.state;
-            const stack = this.getFilteredItems(items, activeCategory);
-            if (activePos === stack.length) {
-                return;
-            } else {
-                this.setState({
-                    activePos: activePos + 1
-                })
+            return {marginTop: `${settings.gutter}px`}
+        }
+    };
+
+    applyArrows(container, arrows) {
+        // console.log(arrows.next);
+        // container.appendChild();
+        // container.insertBefore(arrows.prev, container.firstChild);
+    }
+
+    updateCurrentSlidesVisible(visible = 0) {
+        this.sliderState.currentVisible = visible;
+    }
+
+    determineScrollPos(event, settings, list, track, elements) {
+        const
+            listSize = settings.direction === 'horizontal' ? list.offsetWidth : list.offsetHeight,
+            trackSize = settings.direction === 'horizontal' ? track.offsetWidth : track.offsetHeight,
+            maxScroll = -1 - trackSize + listSize,
+            cssTransformPropName = settings.direction === 'horizontal' ? 'translateX' : 'translateY';
+
+        let scrollPos = 0;
+
+        const currentTransformCss = track.style.transform;
+
+        if (currentTransformCss && currentTransformCss.indexOf(cssTransformPropName) !== -1) {
+            scrollPos = Number(currentTransformCss.match(/\((-?\d+)\w+\)/)[1]);
+        }
+
+        if (event.currentTarget === this.refs['slider-arrow-prev']) {
+            let i;
+            for (i = this.sliderState.currentVisible; i < this.sliderState.currentVisible + this.settings.slidesToScroll; i++) {
+                if (elements[i]) {
+                    scrollPos -= settings.direction === 'horizontal' ? elements[i].offsetWidth : elements[i].offsetHeight;
+                    scrollPos -= settings.gutter;
+
+                    if (scrollPos < maxScroll) {
+                        scrollPos = maxScroll;
+                        break;
+                    }
+
+                } else {
+                    i--;
+                    break;
+                }
             }
+            this.updateCurrentSlidesVisible(i);
+
+
+        } else if (event.currentTarget === this.refs['slider-arrow-next']) {
+            if (this.sliderState.currentVisible === 0) {
+                return;
+            }
+
+            let i;
+
+            for (i = this.sliderState.currentVisible; i > this.sliderState.currentVisible - this.settings.slidesToScroll; i--) {
+                // console.log(elements[i]);
+                if (elements[i]) {
+                    scrollPos += settings.direction === 'horizontal' ? elements[i].offsetWidth : elements[i].offsetHeight;
+                    scrollPos += settings.gutter;
+
+                    if (scrollPos > 0) {
+                        scrollPos = 0;
+                        break;
+                    }
+                } else {
+                    break;
+                }
+
+            }
+            this.updateCurrentSlidesVisible(i);
         }
-    }
 
-    getFilteredItems(items, category) {
-        return items.filter(item => item.categoryId === category.id);
-    }
-
-    updateSlider() {
-        const {items, activeCategory, activePos} = this.state;
-        const stack = this.getFilteredItems(items, activeCategory);
-        this.prepareSliderItems(activePos, stack);
-    }
-
-
-    componentDidUpdate(prevProps, prevState) {
-        if (!prevState.activeCategory || !this.state.activeCategory.id || this.state.activePos === null) {
-            return;
-        }
-
-
-        if ((prevState.activeCategory.id !== this.state.activeCategory.id) || (prevState.activePos !== this.state.activePos)) {
-
-            this.updateSlider();
-        }
+        track.style.transform = `translateY(${scrollPos}px)`;
     }
 
 
     render() {
-        const {categories, items, sliderItems} = this.state;
+        // console.log(this.state);
+
+
+        let arrows;
+        if (this.settings && this.settings.showArrows) {
+            arrows = this.generateArrowsJSX();
+        }
 
         return (
-            <section className="new-deals wave-bottom">
-                <h2 className="h2">Новинки</h2>
-                <div className="new-deals__menu">
-                    <ul className="new-deals__menu-items">
-                        {
-                            categories.length &&
-                            categories.map(category => {
-                                    if (category.id === this.state.activeCategory.id) {
-                                        return <ListItem catId={category.id} onClick={this.setActiveCategory} active
-                                                         key={category.id} title={category.title}/>
-                                    } else {
-                                        return <ListItem catId={category.id} onClick={this.setActiveCategory}
-                                                         key={category.id} title={category.title}/>
-                                    }
-                                }
-                            )
-                        }
-                    </ul>
-                </div>
-                <div className="new-deals__slider">
-                    <div onClick={() => this.setActivePos('decr')}
-                         className="new-deals__arrow new-deals__arrow_left arrow"></div>
-
+            <section className="main-screen__favourite-product-slider">
+                <div ref={el => this.slider = el} className="favourite-product-slider">
                     {
-                        sliderItems.length &&
-                        sliderItems
+                        arrows &&
+                        arrows.prev
                     }
 
-                    <div onClick={() => this.setActivePos('incr')}
-                         className="new-deals__arrow new-deals__arrow_right arrow"></div>
-                </div>
-                <div className="new-deals__product-info">
-                    <a href="product-card-desktop.html" className="h3">Босоножки женские</a>
-                    <p>Производитель:
-                        <span>Damlax</span>
-                    </p>
-                    <h3 className="h3">5 950 ₽</h3>
+                    <div ref="list" className="slider-list">
+                        <div ref="track" className="slider-track">
+                            <div
+                                style={Object.assign({}, this.state.itemStyle || {}, {marginTop:0, marginLeft:0})}
+                                ref="item1"
+                                className="slider-item favourite-product-slider__item favourite-product-slider__item-1">
+                                <a href="#"></a>
+                            </div>
+                            <div
+                                style={this.state.itemStyle || {}}
+                                ref="item2"
+                                className="slider-item favourite-product-slider__item favourite-product-slider__item-2">
+                                <a href="#"></a>
+                            </div>
+                            <div
+                                style={this.state.itemStyle || {}}
+                                ref="item3"
+                                className="slider-item favourite-product-slider__item favourite-product-slider__item-3">
+                                <a href="#"></a>
+                            </div>
+                            <div
+                                style={this.state.itemStyle || {}}
+                                className="slider-item favourite-product-slider__item favourite-product-slider__item-1">
+                                <a href="#"></a>
+                            </div>
+                            <div
+                                style={this.state.itemStyle || {}}
+                                className="slider-item favourite-product-slider__item favourite-product-slider__item-2">
+                                <a href="#"></a>
+                            </div>
+                            <div
+                                style={this.state.itemStyle || {}}
+                                className="slider-item favourite-product-slider__item favourite-product-slider__item-3">
+                                <a href="#"></a>
+                            </div>
+                        </div>
+                    </div>
+
+                    {
+                        arrows &&
+                        arrows.next
+                    }
                 </div>
             </section>
         )
