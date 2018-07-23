@@ -361,85 +361,6 @@ li.active {
 
 /*Слайдеры*/
 
-/*Слайдер выбранного товара*/
-.main-screen__favourite-product-slider {
-  height: 500px;
-}
-
-.favourite-product-slider {
-  position: relative;
-  /*top: 27px;*/
-  /*left: 2px;*/
-  /*width: 142px;*/
-  /*height: 440px;*/
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  align-items: center;
-}
-
-.arrow-up,
-.arrow-down {
-  /*position: absolute;*/
-  height: 30px;
-  width: 30px;
-  background-image: url(../img/product-card-pics/drop-down-up-chevron-sprite.png);
-  background-repeat: no-repeat;
-}
-
-.favourite-product-slider__arrow {
-  right: 57px;
-}
-
-.favourite-product-slider__arrow:hover {
-  cursor: pointer;
-  outline: solid 1px #cccccc;
-}
-
-.favourite-product-slider__arrow_up {
-  background-position: -65px 8px;
-  top: -32px;
-}
-
-.favourite-product-slider__arrow_down {
-  background-position: -5px 9px;
-  bottom: -32px;
-}
-
-.favourite-product-slider__item {
-  width: 142px;
-  height: 128px;
-  border: 1px solid #C4C4C4;
-}
-
-.favourite-product-slider__item:hover {
-  opacity: 0.6;
-}
-
-.favourite-product-slider__item a {
-  display: inline-block;
-  height: 100%;
-  width: 100%;
-}
-
-.favourite-product-slider__item-1 {
-  background: url(../img/product-card-pics/product-card__favourite-product-slider-item-1.png) no-repeat;
-  background-position: 29px 0;
-  background-size: contain;
-}
-
-.favourite-product-slider__item-2 {
-  background: url(../img/product-card-pics/product-card__favourite-product-slider-item-2.png) no-repeat;
-  background-position: 13px 0;
-  background-size: contain;
-}
-
-.favourite-product-slider__item-3 {
-  background: url(../img/product-card-pics/product-card__favourite-product-slider-item-3.png) no-repeat;
-  background-position: 30px 0;
-  background-size: contain;
-}
-
 
 /*Слайдер "Вы смотрели"*/
 .product-card__overlooked-slider {
@@ -695,26 +616,7 @@ width: 7px;
 width: 7px;
 }
 
-.slider-list {
-  position: relative;
-  display: block;
-  overflow: hidden;
-  margin: 0;
-  padding: 0;
-  height: 425px;
-}
 
-.slider-track{
-  transition: transform .3s;
-}
-
-.slider-item{
-  box-sizing: border-box;
-}
-
-.slider-item:not(:first-child) {
-  /*margin-top: 20px;*/
-}
 
 
 
