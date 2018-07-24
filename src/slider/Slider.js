@@ -15,11 +15,7 @@ class Slider extends React.Component {
     }
 
     componentDidMount() {
-        this.sliderInit({
-            direction: 'vertical',
-            equalHeight: true,
-            gutter: 20
-        });
+        this.sliderInit(this.props.settings || {});
     }
 
 
@@ -40,25 +36,26 @@ class Slider extends React.Component {
         this.list = this.refs.list;
 
 
+        this.elements = Array.from(this.track.children);
 
-        this.elements = Array.from(this.track.querySelectorAll('.slider-item'));
+        if (this.elements.length <= this.settings.slidesToShow) {
+            this.settings.showArrows = false;
+        }
 
-        console.log(this.elements);
-        return;
 
         /*Set items styles*/
         this.setItemsStyles()
-            /*After that set List styles*/
+        /*After that set List styles*/
             .then(() => this.setListStyles());
 
     }
 
-    setListStyles(){
+    setListStyles() {
         return new Promise(resolve => {
             const listSize = this.getContainerSize(this.settings, this.elements);
             const listStyle = {};
 
-            if (this.direction === 'horizontal') {
+            if (this.settings.direction === 'horizontal') {
                 listStyle.width = `${listSize}px`;
             } else {
                 listStyle.height = `${listSize}px`;
@@ -70,7 +67,7 @@ class Slider extends React.Component {
         })
     }
 
-    setItemsStyles(){
+    setItemsStyles() {
         return new Promise(resolve => {
             let itemStyle = {};
 
@@ -85,6 +82,7 @@ class Slider extends React.Component {
             if (this.settings.gutter !== 0) {
                 itemStyle = Object.assign(itemStyle, this.getGutterStyle(this.settings));
             }
+
 
             this.setState({
                 itemStyle
@@ -122,7 +120,7 @@ class Slider extends React.Component {
 
         }, size);
         // console.log('123', this.state);
-        return {[dimension] : `${size}px`};
+        return {[dimension]: `${size}px`};
     };
 
     getContainerSize(settings, elements) {
@@ -131,6 +129,8 @@ class Slider extends React.Component {
         let size = 0;
 
         for (let i = 0; i < settings.slidesToShow; i++) {
+            if (!elements[i]) break;
+
             const metric = dimension === 'width' ? elements[i].offsetWidth : elements[i].offsetHeight;
             size += metric;
             if (i !== 0) {
@@ -208,7 +208,7 @@ class Slider extends React.Component {
         }
 
         this.setState({
-            trackStyle: Object.assign({}, this.state.trackStyle, {transform: `translateY(${scrollPos}px)`}),
+            trackStyle: Object.assign({}, this.state.trackStyle, {transform: `${cssTransformPropName}(${scrollPos}px)`}),
             currentVisible: i
         });
     }
@@ -220,35 +220,56 @@ class Slider extends React.Component {
             arrows = this.generateArrowsJSX();
         }
 
+        let containerClassName = 'slider';
+        containerClassName += this.settings && this.settings.direction === 'horizontal' ? ' slider-horizontal' : ' slider-vertical';
+        containerClassName += this.props.className ? ` ${this.props.className}` : '';
+
 
         return (
-            <section className="main-screen__favourite-product-slider">
-                <div className="favourite-product-slider">
-                    {
-                        arrows &&
-                        arrows.prev
-                    }
 
-                    <div style={this.state.listStyle || {}} ref="list" className="slider-list">
-                        <div style={this.state.trackStyle || {}} ref="track" className="slider-track">
-                            {
-                                this.props.children.map((child, index) => {
-                                    if (index > 0) {
-                                        return React.cloneElement(child, {style: this.state.itemStyle, key: index});
-                                    } else {
-                                        return React.cloneElement(child, {key: index});
-                                    }
-                                })
-                            }
-                        </div>
+            <div
+                className={containerClassName}
+            >
+                {
+                    arrows &&
+                    arrows.prev
+                }
+
+                <div style={this.state.listStyle || {}} ref="list" className="slider-list">
+                    <div
+                        style={this.state.trackStyle || {}}
+                        ref="track"
+                        className="slider-track"
+                    >
+                        {
+                            this.props.children.map((child, index) => {
+                                const className = child.props.className ? `${child.props.className} slider-item` : 'slider-item';
+                                if (index > 0) {
+                                    return React.cloneElement(
+                                        child,
+                                        {
+                                            className,
+                                            style: Object.assign({}, child.props.style, this.state.itemStyle),
+                                            key: index
+                                        });
+                                } else {
+                                    return React.cloneElement(
+                                        child,
+                                        {
+                                            className,
+                                            key: index
+                                        });
+                                }
+                            })
+                        }
                     </div>
-
-                    {
-                        arrows &&
-                        arrows.next
-                    }
                 </div>
-            </section>
+
+                {
+                    arrows &&
+                    arrows.next
+                }
+            </div>
         )
     }
 }

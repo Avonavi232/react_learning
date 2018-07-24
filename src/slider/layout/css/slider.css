@@ -38,6 +38,7 @@
     width: 142px;
     height: 128px;
     border: 1px solid #C4C4C4;
+
 }
 
 .favourite-product-slider__item:hover {
@@ -53,6 +54,7 @@
 
 .favourite-product-slider__item {
     background-size: contain;
+    background: no-repeat center;
 }
 
 
@@ -70,4 +72,32 @@
 
 .slider-item{
     box-sizing: border-box;
+}
+
+.slider.slider-horizontal{
+    display: flex;
+    align-items: center;
+}
+
+.slider.slider-horizontal .slider-track {
+    display: inline-block;
+    white-space: nowrap;
+}
+
+.slider.slider-horizontal .slider-item {
+    display: inline-block;
+}
+
+.slider.slider-horizontal .slider-arrow-prev {
+    transform: rotate(-90deg);
+}
+
+.slider.slider-horizontal .slider-arrow-next {
+    transform: rotate(-90deg);
+}
+
+.slider-vertical {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
 }
