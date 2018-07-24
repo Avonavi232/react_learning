@@ -19,6 +19,10 @@ class ProductPics extends React.Component{
         }
     }
 
+    selectImageHandler = event =>{
+        this.setState({selected: event.currentTarget.dataset.img});
+    };
+
 
     render(){
         return(
@@ -28,9 +32,10 @@ class ProductPics extends React.Component{
                         {
                             this.props.images.map((image, index) =>
                                 <div
-                                    onClick={() => console.log(123)}
+                                    onClick={this.selectImageHandler}
                                     key={index}
                                     style={{backgroundImage: `url('${image}')`}}
+                                    data-img={image}
                                     className="favourite-product-slider__item"
                                 >
                                     <a href="#"></a>

@@ -88,11 +88,9 @@ h2.section-name {
     justify-content: center;
 }
 
-/*.main-screen__favourite-product-pic img {*/
-/*position: relative;*/
-/*top: 23px;*/
-/*left: 14px;*/
-/*}*/
+.main-screen__favourite-product-pic img {
+    max-width: 100%;
+}
 
 .main-screen__favourite-product-pic img:hover {
     box-shadow: 2px 2px 2px 2px #cccccc;

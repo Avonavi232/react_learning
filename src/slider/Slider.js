@@ -247,18 +247,20 @@ class Slider extends React.Component {
                                 if (index > 0) {
                                     return React.cloneElement(
                                         child,
-                                        {
+                                        Object.assign({}, child.props, {
                                             className,
                                             style: Object.assign({}, child.props.style, this.state.itemStyle),
                                             key: index
-                                        });
+                                        })
+                                    );
                                 } else {
                                     return React.cloneElement(
                                         child,
-                                        {
+                                        Object.assign({}, child.props, {
                                             className,
                                             key: index
-                                        });
+                                        })
+                                    );
                                 }
                             })
                         }
